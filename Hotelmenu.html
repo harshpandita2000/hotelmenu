@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Akka's Food Centre Menu</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+            rel="stylesheet" />
+        <style>
+
+        input[type="number"]:focus {
+            font-size: 16px;
+        }
+          @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite ease-in-out;
+        }
+    .rating-container {
+            width: 100%;
+            padding: 15px 0;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fff5f5, #fff);
+        }
+
+        .logo-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            padding: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-item {
+            position: relative;
+            text-decoration: none;
+        }
+
+        .rating-logo {
+            width: 45px;
+            height: 45px;
+            padding: 8px;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            animation: gentleFloat 3s infinite;
+            animation-delay: calc(var(--delay) * 0.5s);
+        }
+
+        .logo-item:nth-child(1) { --delay: 0; }
+        .logo-item:nth-child(2) { --delay: 1; }
+        .logo-item:nth-child(3) { --delay: 2; }
+        .logo-item:nth-child(4) { --delay: 3; }
+
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .logo-item:hover .rating-logo {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .footer-text {
+            color: #666;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            margin: 15px 0 0 0;
+            padding: 0 10px;
+            text-align: center;
+        }
+
+        .heart-icon {
+            color: #ff6b6b;
+            display: inline-block;
+            animation: heartBeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Active state for touch devices */
+        .logo-item:active .rating-logo {
+            transform: scale(0.95);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 480px) {
+            .logo-grid {
+                gap: 20px;
+                padding: 10px 15px;
+            }
+
+            .rating-logo {
+                width: 40px;
+                height: 40px;
+                padding: 6px;
+            }
+
+            .footer-text {
+                font-size: 14px;
+            }
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            user-select: none;
+        }
+        /* */
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: rotate 10s linear infinite;
+          }
+
+          .title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-top: 1rem;
+            background: linear-gradient(90deg, #ec4899, #a855f7, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: pulse 2s ease-in-out infinite;
+          }
+
+          @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+
+          @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+          }
+
+          @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes bottleTwinkle {
+            0% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+            100% { transform: rotate(-10deg); }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            animation: sparkle 1.5s infinite;
+        }
+
+        .sparkle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .sparkle:nth-child(2) { top: 30%; left: 20%; animation-delay: 0.2s; }
+        .sparkle:nth-child(3) { top: 40%; right: 20%; animation-delay: 0.4s; }
+        .sparkle:nth-child(4) { top: 25%; right: 10%; animation-delay: 0.6s; }
+
+        .bottle-shake {
+            animation: bottleTwinkle 3s infinite ease-in-out;
+            display: inline-block;
+        }
+
+
+
+        @keyframes slidein {
+            0% { transform: translateX(-100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        .cart-offer {
+            animation: slidein 0.5s ease-out;
+            background-size: 200% 100%;
+            background-image: linear-gradient(to right, #dbeafe 0%, #eff6ff 50%, #dbeafe 100%);
+            animation: shimmer 3s infinite linear;
+        }
+
+        .offer-icon {
+            transform-origin: center;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .offer-icon:hover {
+            transform: scale(1.2);
+        }
+
+
+    </style>
+    </head>
+    <body
+
+        class="bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 min-h-screen">
+        <div class="container mx-auto px-4 py-8">
+
+            <div class="flex flex-col items-center mb-8">
+                <img
+                    src="https://static.vecteezy.com/system/resources/previews/013/799/155/original/female-chef-cartoon-mascot-illustration-free-vector.jpg"
+                    alt="Akka's Menu Logo"
+                    class="logo">
+                <h1
+                    class="title">
+                    Food Court Menu
+                </h1>
+            </div>
+
+      
+
+
+
+         
+
+
+            <div class="lg:hidden fixed bottom-4 right-4 z-40">
+                <button id="mobileCartToggle"
+                    class="bg-blue-500 text-white p-4 rounded-full shadow-lg relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span id="mobileBadge"
+                        class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 py-1 text-xs">0</span>
+                </button>
+            </div>
+
+            <!-- Search box -->
+            <div class="flex items-center justify-center mb-6">
+                <div class="relative w-full max-w-md">
+                    <input type="text" id="searchInput"
+                        placeholder="Search menu categories..."
+                        class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-md">
+                    <span class="absolute top-2 right-4 text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                            viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M8 4a6 6 0 100 12A6 6 0 008 4zm8.707 11.293a1 1 0 01-1.414 1.414l-3.621-3.621a8 8 0 111.414-1.414l3.621 3.621z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="flex flex-col lg:flex-row gap-6 relative">
+
+                <div class="flex-grow">
+
+                    <div id="menuCategories" class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-4">
+                    </div>
+
+                    <div id="menuItems" class="mt-8 hidden">
+                        <button id="backButton"
+                            class="mb-6 px-4 py-2 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Back to Categories
+                        </button>
+                        <div id="itemsList"
+                            class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div id="cartContainer"
+                    class="fixed inset-0 z-50 bg-white bg-opacity-95 hidden lg:block lg:w-96 lg:bg-transparent lg:bg-opacity-100 lg:static">
+                    <div
+                        class="h-full lg:sticky lg:top-4 bg-white shadow-lg rounded-lg p-6 max-h-[80vh] overflow-y-auto relative">
+                        <h2
+                            class="text-2xl font-bold mb-4 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                Your Cart
+                                <span id="cartItemCount"
+                                    class="bg-blue-500 text-white text-sm rounded-full px-2 py-1">0</span>
+                            </div>
+                            <button id="mobileCartClose"
+                                class="lg:hidden text-gray-600 hover:text-gray-900 z-50">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-6 w-6" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round"
+                                        stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </h2>
+
+
+
+
+
+                        <ul id="cartItems" class="space-y-2">
+                            <!-- Cart items will be dynamically added here -->
+                        </ul>
+
+                        <div id="cartSummary" class="mt-4 pt-4 border-t">
+                            <div class="flex justify-between font-semibold">
+                                <span>Total Items:</span>
+                                <span id="totalItemCount">0</span>
+                            </div>
+                            <div
+                                class="flex justify-between font-bold text-lg mt-2">
+                                <span>Total Amount:</span>
+                                <span id="totalAmount">₹0</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 mt-4">
+                                <button id="checkoutButton"
+                                    class="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                        fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Checkout
+                                </button>
+                                <button id="clearCartButton"
+                                    class="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                        fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Clear
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Rating Section -->
+<div class="rating-container">
+    <div class="logo-grid">
+        <p class="rating-text">📞 Any queries regarding food or wanna order? Just call me at <strong>8978424192</strong></p>
+    </div>
+    <p class="footer-text">We'd love to hear from you! <span class="heart-icon">❤️</span></p>
+</div>
+
+                <div id="orderModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+                    <div class="bg-white rounded-lg w-full max-w-md p-6 shadow-lg">
+                        <!-- Modal Header -->
+                        <h2 class="text-xl font-bold text-center text-gray-800 mb-4">🛒 Order Summary</h2>
+                        <!-- <p class="text-sm text-gray-600 text-center mb-6">
+                            Please show this order summary to the receptionist or waiter to proceed. 🍽️
+                        </p> -->
+                        
+
+                                    <!-- Room Number Input -->
+                    <div class="mb-4">
+                    <label for="roomNumber" class="block text-sm font-medium text-gray-700">Enter Your Room Number:</label>
+                    <input type="text" id="roomNumber" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                    </div>
+
+
+                        <!-- Order Details -->
+                        <ul id="orderDetails" class="space-y-2 mb-4 text-lg font-bold text-gray-700"></ul>
+
+                        <!-- Total Amount -->
+                        <p class="font-semibold text-lg text-center">
+                            💰 Total Amount: <span id="modalTotalAmount" class="text-green-600 font-bold"></span>
+                        </p>
+
+                        <!-- Action Buttons -->
+                        <div class="flex justify-between mt-4">
+                            <button id="closeModalButton"
+                                class="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition duration-300">
+                                Close
+                            </button>
+                            <button id="whatsappButton"
+                                class="px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition duration-300">
+                                 <!-- 📲 Send via WhatsApp --> Place Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+         <footer class="bg-gray-100 p-4 text-center pb-16 lg:pb-4">
+            <p class="text-sm flex justify-center items-center pulse">
+                Developed by
+                <a href="https://www.linkedin.com/in/harsh-pandita-dev/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="text-blue-600 hover:underline inline-flex items-center ml-2">
+                    Harsh Pandita
+                    <img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/circle-linkedin-512.png"
+                         alt="LinkedIn Badge" height="20" width="20" class="ml-2" />
+                </a>
+                <a href="https://www.instagram.com/harsh_.pandita/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="text-blue-600 hover:underline inline-flex items-center ml-2">
+                    <img src="https://cdn2.iconfinder.com/data/icons/social-icons-33/128/Instagram-256.png"
+                         alt="Instagram Badge" height="20" width="20" class="ml-2" />
+                </a>
+            </p>
+        </footer>
+
+
+
+        <style>
+
+        #orderModal {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        #orderModal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+        @media (max-width: 640px) {
+            #orderModal .modal-content {
+                width: 90%;
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+        }
+
+    </style>
+
+
+
+        <script>
+        const menuData = [
+
+        {
+            "category": "Chicken & Fish Specials",
+            "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS_xux7J8JULrVaTZHN3kfaaP9fOeuDazqag&s",
+            "items": [
+              { "name": "Chilli Prawns", "price": 300, image:"https://www.licious.in/blog/wp-content/uploads/2020/12/Chilli-Prawns.jpg" },
+              { "name": "Garlic Prawn", "price": 280, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPgrAvijFLOViDXvZ9uzxE08PILc0Vbb3VdQ&s" },
+              { "name": "Ginger Prawns", "price": 290, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaeaRGhfqJMohN1S-uxc_I4MWfYDIkqh3pxw&s" },
+              { "name": "Garlic Chicken", "price": 250, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSd8yKNe2c7wVMQ4Ivr96PotQCUbbtizmut0A&s" },
+              { "name": "Ginger Chicken", "price": 250, image:"https://www.lordbyronskitchen.com/wp-content/uploads/2023/03/2-1.jpg" },
+              { "name": "Chicken 65", "price": 170, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxLUylpXSB7u85LFAYqTeMTc1SBAuH-YKJ_Q&s" },
+              { "name": "Chicken Majestic", "price": 250, image:"https://spiceeats.com/wp-content/uploads/2020/07/Chicken-Majestic.jpg " },
+              { "name": "Tai Pai Chicken", "price": 200 , image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvzD1osUrybK7pYoV2NS5SGgdc0vlJxUE3sg&s "},
+              { "name": "Mughlai Chicken", "price": 260, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRk2nIv687rtQwPad7RKUQy4swmgrKfo2Zxvw&s" },
+              { "name": "Chicken Sangrila", "price": 250, image:" https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIXAoHxd24Fr3vCars__mzbShHbsq_IsCEmQ&s" },
+              { "name": "Malai Chicken", "price": 200 , image:" https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7y69Dwwmrl7fxFB2iFVyefru8MdEXifGV1g&s"},
+              { "name": "Garlic Fish Fry", "price": 260 , image:"https://www.yummytummyaarthi.com/wp-content/uploads/2022/02/fish-fry-1.jpeg"},
+              { "name": "Ginger Fish Fry", "price": 260 , image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYGshJQ7B6ILPhGmhjJrPd9rT0m3NVu5uuqw&s"}
+              ]},
+
+        {
+        "category": "Must Try Combos",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqfejkG-k6jahDIerNX4qPGSbnWTacheTbCQ&s",
+        "items": [
+            { "name": "Maggi Delight with Chilled Coke", "price": 90, image:"https://b.zmtcdn.com/data/dish_photos/cc1/7efaab1d547f7614094a7dcb60aa7cc1.jpg" },
+            { "name": "Royal Paneer Biryani & Refreshing Coke", "price": 180, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqSKp4YAmMIUS59m_ZPNTwXoIQ1rt7YYGtGA&s" },
+            { "name": "Spicy Chicken Biryani with Ice-Cold Coke", "price": 200, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSI9AoSeCc-epa7RO4Wee9Uipm7eobjhpMRWw&s" },
+            { "name": "Flavorful Veg Biryani & Cool Coke", "price": 160, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJ4d6LLY7IXQXyEk2iIumf2hzLLJMRwKzrQQ&s" },
+            { "name": "Egg Biryani Bliss with Coke", "price": 180, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBmSWz_Qf6GNCa17WmuM5nIEwE73pl8Mzkqw&s" }
+        ]
+        },
+
+        {
+            "category": "Biryani Specials",
+            "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6Wc-hevy-yxW0pVomqf2_T6_w4EOLiSl22w&s",
+            "items": [
+              { "name": "Chicken Biryani", "price": 160, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoIycguxFgTpIN3L00tYQhJ2WkypXj5w_QkQ&s" },
+              { "name": "Paneer Biryani", "price": 180, image:"https://ministryofcurry.com/wp-content/uploads/2023/10/Laxmi-Paneer-Biryani_-5.jpg" },
+              { "name": "Veg Biryani", "price": 140, image:"https://www.madhuseverydayindian.com/wp-content/uploads/2022/11/easy-vegetable-biryani.jpg" },
+              { "name": "Egg Biryani", "price": 150, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgcVbkj0kqkqRqaWxhZHiHsFP14MO5_LR9Og&s" },
+              { "name": "Chicken 65 Biryani", "price": 280, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7BPvFXQOahxB-TB13vq-En4xGxq_j_GPbpg&s" },
+            { "name": "Chicken Manchurian Biryani", "price": 280, image:"https://b2958125.smushcdn.com/2958125/wp-content/uploads/chicken-manchurian-recipe-dry-restaurant-style-1.jpg?lossy=1&strip=1&webp=1" },
+            { "name": "Prawns 65 Biryani", "price": 400, image:"https://vaya.in/recipes/wp-content/uploads/2018/06/Cabbage-and-Prawn-65-Biryani.jpg" }
+            ]
+          },
+          {
+            "category": "Tea & Coffee",
+            "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1NGPR7OyQYD9cXE2-V0PMEpHeQrlh3QZv4w&s",
+            "items": [
+              { "name": "Plain Tea", "price": 30, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgHOyq_fRKRwCp61e_Y5YPKc794OfhuS2Jgg&s" },
+              { "name": "Ginger Tea", "price": 40, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIhLnV8pFAIQit2BsFWgJNz29imPN4uuUxoA&s" },
+              { "name": "Lemon Tea", "price": 35, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBEWJj5p90lYFUJDnRU9MF1xUrtCHpz5H_wg&s" },
+              { name: "Cold Boost", price: 100, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7xhuwgq6ZWOdiD5qpt6O3oVHs2S9pmZIQgQ&s" },
+              { name: "Cold Coffee", price: 100, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0yURWWoZjeN8cGH0CnuAdMM-kH7TpzYfMig&s" },
+              { name: "Cold Horlicks", price: 100, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvcsA1X36SHkxbMheeQTql_CLM7BIZ5ej44A&s" }
+            ]
+          },
+          {
+            "category": "Egg Specials",
+            "image": "https://e7.pngegg.com/pngimages/353/298/png-clipart-fried-egg-breakfast-omelette-recipe-breakfast-food-recipe-thumbnail.png",
+            "items": [
+              { "name": "Boiled Egg", "price": 20, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDEGpYCA7mKNzDhCJm2O7oLUad33M769-SRw&s" }
+            ]
+          },
+
+        {
+
+                category: "Roti & Paratha",
+                image: "https://parafit.in/wp-content/uploads/2019/03/Tawa-Roti-600x500.jpg",
+                items: [
+                { name: "Chapathi", price: 20, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9VbdMoqOHcHqZq5AI9CBkPdBQlU2tv0BFqA&s" },
+                { name: "Phulka", price: 20, image:"https://www.archanaskitchen.com//images/archanaskitchen/Indian_Breads/Phulka_Roti_Chapati_Puffed_indian_Flat_Bread_Recipe-1-2.jpg" },
+                { name: "Paneer Onion Parata", price: 80, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Tawa Butter Roti", price: 25, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUUA3VoIA0M-2Kmzu2bze7avm9pQqW9QxQvg&s" },
+                { name: "Aloo Onion Methi Parata", price: 70, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Aloo Onion Pudina Parata", price: 70, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Tawa Ghee Roti", price: 25, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUUA3VoIA0M-2Kmzu2bze7avm9pQqW9QxQvg&s" },
+                { name: "Plain Parata", price: 25, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Aloo Parata", price: 70, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Plain Ajwain Parata", price: 30, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXEtQ3CVFsIYUoicq70Cu7GoRdHndHzmsTqA&s" },
+                { name: "Aloo Onion Parata", price: 85, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Lacha Parata", price: 30, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXEtQ3CVFsIYUoicq70Cu7GoRdHndHzmsTqA&s" },
+                { name: "Aloo Methi Parata", price: 70, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Lacha Ajwain Parata", price: 40, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXEtQ3CVFsIYUoicq70Cu7GoRdHndHzmsTqA&s" },
+                { name: "Aloo Gobi Parata", price: 70, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Cheese Parata", price: 100, image:"https://www.yellowthyme.com/wp-content/uploads/2024/08/Cheese-paratha-2.jpg" },
+                { name: "Gobi Parata", price: 70, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Aloo Cheese Parata", price: 100, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Gobi Onion Parata", price: 70, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Gobi Cheese Parata", price: 100, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Gobi Onion Methi Parata", price: 80, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Onion Cheese Parata", price: 100, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Methi Parata", price: 70, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Paneer Cheese Parata", price: 110, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Methi Onion Parata", price: 70, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Mix Cheese Parata", price: 70, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Pudina Onion Parata", price: 70, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Mix Veg Parata", price: 70, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Onion Parata", price: 70 , image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s"},
+                { name: "Paneer Parata", price: 100, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGZ6j2Os3f-B5Y2tbRkBqh5p1JPAGMG9dYcw&s" },
+                { name: "Mushroom Parata", price: 100, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzGD3MsDDVGL1ka4Gn5iTR8dS4cqQp5T5I_A&s" },
+                { name: "Chicken Parata", price: 100, image:"https://c.ndtvimg.com/2021-08/e1f8dpq_paratha_625x300_04_August_21.jpg" },
+                { name: "Egg Parata (2 Eggs)", price: 80, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSe95xiHuHiPw5758xXzg-DieOtiZjI-oUUaQ&s" },
+                { name: "Sweet Parata (Sugar)", price: 70, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDF4E6J8AJpAeyCddcJJgBYALJ3yPNwUuwgw&s" },
+                { name: "Sweet Parata (Jaggery)", price: 70, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDF4E6J8AJpAeyCddcJJgBYALJ3yPNwUuwgw&s" }
+
+                ],
+            },
+            {
+                category: "Rice Item",
+                image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2023/07/basmati-rice-recipe.jpg",
+                items: [
+                { name: "White Rice", price: 45, image:"https://www.lemonblossoms.com/wp-content/uploads/2019/11/How-To-Cook-White-Rice-6.jpg" },
+                { name: "Jeera Rice", price: 90, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLUMi8inD2J8HRTxS2V-XF22KT9ZMMNyA8rw&s" },
+                { name: "Chole Chawal", price: 120, image:"https://sattvakitchen.com/wp-content/uploads/2024/05/CHOLE-CHAWAL-iStock-1917310235.jpg" },
+                { name: "Daal Chawal", price: 80, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKe-KlOZnnRvMxqgPzeDYrg9FE-nu0t25rnw&s" },
+                { name: "Rajma Chawal", price: 120, image:"https://biryanibonanza.com/wp-content/uploads/2024/06/Rajma-Chawal-cover-image-2.jpg" },
+                { name: "Kadhi Chawal", price: 120, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRY_cY7LKIe5bQ8B0woqpNUr-8DFjha_4vzpQ&s" },
+                { name: "Daal Makhni Chawal", price: 140, image:"https://orders.popskitchen.in/storage/2024/09/image-51.png" }
+                ],
+            },
+            {
+                category: "Curd",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzCZCNl6tCPVGf1J3a2X-DtmkLM8eJcvClwQ&s",
+                items: [
+                { name: "Plain Curd", price: 30, image: "https://enjoyinfourseason.com/wp-content/uploads/2022/05/Fourseason-PLAIN-CURD.jpg" },
+                { name: "Curd with Sugar", price: 35, image: "https://enjoyinfourseason.com/wp-content/uploads/2022/05/Fourseason-PLAIN-CURD.jpg" },
+                { name: "Plain Raita", price: 40, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB04ZlID0rp4JE__zDwHXXxNlURq7VNS8glg&s" },
+                { name: "Onion Raita", price: 40, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRn2IkhPwDArwqKjw0sRI7TV23gvZGl6oEzOw&s" },
+                { name: "Boondi Raita", price: 50, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZWEsMAqSegmFxuKgmoHrQV0eMc1h2hLCN3A&s" },
+                { name: "Aloo Raita", price: 40 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdydeMwCmFPYIqDHD1Q3MmQuvRteBmcXJsGA&s"},
+                { name: "Mix Raita", price: 40, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT19vb7sNIlrFGTVmmvDwSIdTxZFTaYtvcAUw&s" }
+
+                ],
+            },
+            {
+                category: "Special Thali",
+                image: "https://5.imimg.com/data5/HU/PG/OE/SELLER-9770898/special-veg-thali.jpg",
+                items: [
+                { name: "Daal+Sabji+Rice+3 Roti", price: 180, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUAb_ie-GJG-pYUSbP3bzKI6AbeAMspfsGxQ&s" },
+                { name: "Daal+Paneer+Rice+3 Roti", price: 220, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUAb_ie-GJG-pYUSbP3bzKI6AbeAMspfsGxQ&s" },
+                { name: "Daal Makhni+Paneer+Rice+3 Roti", price: 280, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUAb_ie-GJG-pYUSbP3bzKI6AbeAMspfsGxQ&s" },
+                { name: "Daal Makhni+Sabji+Rice+3 Roti", price: 180, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUAb_ie-GJG-pYUSbP3bzKI6AbeAMspfsGxQ&s" },
+                { name: "Daal Makhni+Sabji+Rice+2 Plain Parata", price: 200, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuuyzXoGtr3I9Kw-omJvle4FFKEh_MMP4CHw&s" },
+                { name: "Daal Makhni+Paneer+Rice+2 Plain Parata", price: 220, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuuyzXoGtr3I9Kw-omJvle4FFKEh_MMP4CHw&s" }
+                ],
+            },
+           
+            {
+                category: "Veg Curry and Specials",
+                image: "https://www.sharmispassions.com/wp-content/uploads/2021/07/MixedVegetableGravy2-500x375.jpg",
+                items: [
+
+                { name: "Sprouts", price: 80  , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5G32IWF0y73SFjWaJvcHMp7PGUOcPZ5YQkw&s "},
+                { name: "Baigan ka Bharta", price: 80 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQX0ehzm4y-pahztPOVgqUxIXJMoXe6ertRCA&s " },
+                { name: "Daal Tadka", price: 100 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTW10WLAcgFH5wty_xHbYRJBIQ7sXyvV_zasA&s "},
+                { name: "Methi Chaman", price: 180, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEWOddWn8BE-CN-hLikYC8mr5FtBLxREUIAQ&s" },
+                { name: "Corn Palak", price: 120 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI9w7RBDFlz5cN4MTDNBd95fu0wwfZKCYGAQ&s"},
+                { name: "Corn Masala", price: 120, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI9w7RBDFlz5cN4MTDNBd95fu0wwfZKCYGAQ&s" },
+                { name: "Paneer Tikka Masala", price: 220, image: "https://img.freepik.com/premium-photo/indian-paneer-tikka-black-bowl-dark-background_875825-169496.jpg?w=360" },
+                { name: "Paneer Masala", price: 180, image: "https://t4.ftcdn.net/jpg/03/31/65/45/360_F_331654539_FaCJJWVUB3SmrIPIkmeEOnk7TYgl7xQC.jpg" },
+                { name: "Paneer Bhurji", price: 160, image: "https://img.freepik.com/premium-photo/paneer-bhurji-mildly-spiced-cottage-cheese-scramble-served-with-roti-laccha-paratha-selective-focus_466689-55360.jpg" },
+                { name: "Palak Paneer", price: 160, image: "https://img.freepik.com/premium-photo/palak-paneer-indian-traditional-food-with-cheese-spinach-black-background-view-from_233226-742.jpg" },
+                { name: "Kaju Masala", price: 180, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbdE_wBsap-LGYHe2KctmCRUHTxw8uA23tGA&s" },
+                { name: "Mushroom Masala", price: 180, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwhag0dqilStR-OQ1qpLlKxs7sbNpUufkELw&s" },
+                { name: "Green Peas Masala", price: 160, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_RygIsL4cAS-oqdeoEkqu190leTtg1o2tDQ&s" },
+                { name: "Butter Paneer Masala", price: 220, image: "https://img.freepik.com/premium-photo/delicious-paneer-butter-masala-photography_928503-851.jpg" },
+                { name: "Daal Makhni", price: 120, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLEPtOoreFKq5ZVi0jjJwhw-Da-w_G43KkGg&s" }
+                ],
+            },
+
+            {
+                category: "Non Veg Curry",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR26EQZRZi8mlYkvClOismpXhzX0XgA_GRlnQ&s",
+                items: [
+                { name: "Egg Curry", price: 120  , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6UivmKHpc6uKp-xe9ONz8M2qreTgsyIWy-g&s"},
+                { name: "Egg Bhurji", price: 100 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxMffXh0Te3nn2PpVYSrupzNp21BElt2_cgw&s" },
+                { name: "Omelette", price: 50  , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTE3bXWtgsNofQPULUj4trso_u3jOjDo2LK0g&s"},
+                { name: "Chicken Roast", price: 120 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRN9jQmnAaLO89qJJF7K82GqPuPon-ViUjynQ&s" },
+                { name: "Chicken Curry", price: 120  , image: "https://t4.ftcdn.net/jpg/04/35/23/95/360_F_435239569_iTa3kLtV6PtlOBchUV4w7J1Tm0oSCx1l.jpg"},
+                { name: "Liver Roast", price: 110, image: "https://img.freepik.com/free-photo/fried-chicken-liver-with-onions-herbs_2829-19702.jpg" },
+                { name: "Prawn Curry", price: 220 , image: "https://img.freepik.com/free-photo/high-angle-delicious-shrimp-meal_23-2148771278.jpg"},
+                { name: "Prawn Fry", price: 300 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZLgNnbC3d5IqobKBlQtjeiVgGVaBqe12PxQ&s"},
+                { name: "Fish Curry", price: 120 , image: "https://img.freepik.com/premium-photo/fish-curry-seer-fish-curry-traditional-indian-fish-curry-kerala-special-dish-arranged-white-bowl-garnished-with-curry-leaves-white-background_527904-2012.jpg"},
+                { name: "Fried Chicken Leg Piece", price: 90 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRtu5l7EeCZLeSihOA5N9zAvQBpG9tGJKNaQ&s"},
+                { name: "Fish Fry", price: 90 , image: "https://img.freepik.com/free-photo/view-delicious-fried-fishes-lemon-slices-brown-plate-pepper-tomatoes-with-stem-mix-colors-table-with-free-space_179666-18165.jpg"}
+                ],
+            },
+
+            
+            {
+                category: "Snacks & Desserts",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR651XQV65abHGAG_JEyPGjVi4CLvZMvaKTEw&s",
+                items: [
+               
+                { name: "Sabudana Kichidi", price: 90 , image: "https://t4.ftcdn.net/jpg/03/12/48/45/360_F_312484504_KylQWO8I48yeNqS4X2AOT94QFLSEeBfp.jpg"},
+                { name: "Gajar Ka Halwa", price: 90, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ5o5-lFMKldOBgp7I11rdjS4CrY_cnHcF2Q&s" },
+                { name: "Semiya Upma", price: 80, image: "https://img.freepik.com/premium-photo/semiya-upma-vermicelli-uppuma-uppittu-is-popular-breakfast-menu-from-south-india-served-bowl-selective-focus_466689-52559.jpg" },
+                { name: "Gulab Jamun", price: 50 , image: "https://t4.ftcdn.net/jpg/06/21/54/41/360_F_621544128_inBjLYomzXLGFiNVri9ebirH1MMJ7ige.jpg"},
+                { name: "Rice Kheer", price: 50, image: "https://t4.ftcdn.net/jpg/11/44/17/01/360_F_1144170196_sa3iVNeHNqiPw5LvH9Q45RYekn6L7mMP.jpg" }
+                ],
+            },
+
+
+
+            {
+                category: "Soups",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp8Kv-G872qLWTI662Cl_B9r9FtaA4DguMiA&s",
+                items: [
+                { name: "Veg Manchow Soup", price: 120, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTj3J_spNaIiiztSOe-pJeaU3P6_bkSTqWp7Q&s" },
+                { name: "Chicken Manchow Soup", price: 140, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTG7KUn-QkEJHWdSjOROmsGHrnAae_Z63nvcA&s" },
+                { name: "Veg Hot Sour Soup", price: 120, image: "https://t4.ftcdn.net/jpg/01/37/02/01/360_F_137020166_wY5X15FhMlIq1AqWxvOzQVkC4WFKLrV7.jpg" },
+                { name: "Veg Corn Soup", price: 120, image: "https://img.freepik.com/premium-photo/still-life-corn-soup-wallpaper_980736-1653.jpg" },
+                { name: "Tomato Soup", price: 100, image: "https://wallpapers.com/images/hd/classic-tomato-soup-with-croutons-qh13zy8hz8ql6q5a.jpg" },
+                { name: "Veg Mushroom Soup", price: 120, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOBpmf043Ga6y5l_7SK_T_AJl6mZPhpYV98A&s" },
+                { name: "Veg Coriander Soup", price: 100, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjlVSBB0eE-iYSmY5rSwNJ1nwtpSUq8-2WEQ&s" }
+                ],
+            },
+
+            {
+                category: "Starters",
+                image: "https://www.freshtohome.com/blog/wp-content/uploads/2024/08/ChickenStarter1.png",
+                items: [
+                { name: "Veg Crispy", price: 150, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcbCNsJu3C_xbAINmYVYsZLOkgxeipLrrMsQ&s" },
+                { name: "Veg Crispy/Schezwan", price: 160 , image: "https://thumbs.dreamstime.com/b/veg-crispy-batter-fried-vegetables-tossed-chinese-sauce-tastes-tangy-s-popular-starters-appetizer-india-served-225788924.jpg "},
+                { name: "Paneer Chilli", price: 200, image: "https://t3.ftcdn.net/jpg/04/75/97/94/360_F_475979476_UFhDFws74q434yLdFh5V49eZTjn0RWLX.jpg" },
+                { name: "Paneer Crispy", price: 220 , image: "https://t3.ftcdn.net/jpg/04/75/97/94/360_F_475979476_UFhDFws74q434yLdFh5V49eZTjn0RWLX.jpg"},
+                { name: "Chicken Crispy", price: 210, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMgWZw6GUQtbts1K2aulUZQKDlCntPTPBnVQ&s" },
+                { name: "Mushroom Chilli", price: 200, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTL22XBDdPBilROYg7k9129esrdxweC-VJgzg&s" },
+                { name: "Chicken Chilli", price: 200 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiyvUF4sW5yVBW9LNk3SzG2DlIrtguoz6VkA&s"},
+                { name: "Veg Manchurian", price: 150 , image: "https://t3.ftcdn.net/jpg/04/47/95/48/360_F_447954890_nYoJ3Lm6OElMe0LogDry2KfHF4tXsfMw.jpg"},
+                { name: "Chicken Manchurian", price: 180, image: "https://t4.ftcdn.net/jpg/05/92/83/67/360_F_592836722_tqaJf9yp2JKCTvRGIqLHdCoSE87iKex8.jpg" },
+                { name: "Gobi Chilli", price: 160, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwIjBJoleAoRokI_LJkrEJW8TQAHwa0JVFTw&s" }
+                ],
+            },
+
+            {
+                category: "Fried Rice",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSvJ-4KVdyGWaeCdR6w1vhY653Xyk9g2Y0lQ&s",
+                items: [
+                { name: "Veg Fried Rice", price: 100, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS99ViyF0XxlPX0Oq9Ol8QrlaoABeo8Z53rcQ&s" },
+                { name: "Veg Manchurian Fried Rice", price: 120, image: "https://as1.ftcdn.net/jpg/03/24/56/72/1000_F_324567265_RvHUPztZte9QWkCb8idpauxXhrhyMnsd.jpg" },
+                { name: "Veg Schezwan Fried Rice", price: 120, image: "https://as1.ftcdn.net/jpg/03/24/56/72/1000_F_324567265_RvHUPztZte9QWkCb8idpauxXhrhyMnsd.jpg" },
+                { name: "Mushroom Fried Rice", price: 130 , image: "https://as1.ftcdn.net/jpg/03/24/56/72/1000_F_324567265_RvHUPztZte9QWkCb8idpauxXhrhyMnsd.jpg"},
+                { name: "Egg Fried Rice", price: 140, image: "https://t3.ftcdn.net/jpg/00/80/06/42/360_F_80064236_Rxakveyae98OD4HbG2tOFDQdUXkf5DkM.jpg" },
+                { name: "Egg Manchurian Fried Rice", price: 150 , image: "https://www.licious.in/blog/wp-content/uploads/2021/09/shutterstock_1650877375.jpg"},
+                { name: "Egg Schezwan Fried Rice", price: 160, image: "https://www.licious.in/blog/wp-content/uploads/2021/09/shutterstock_1650877375.jpg" },
+                { name: "Egg Mushroom Fried Rice", price: 170, image: "https://www.licious.in/blog/wp-content/uploads/2021/09/shutterstock_1650877375.jpg" },
+                { name: "Chicken Fried Rice", price: 150, image: "https://watermark.lovepik.com/photo/20211119/large/lovepik-chicken-fried-rice-picture_500214688.jpg" },
+                { name: "Chicken Manchurian Fried Rice", price: 180, image: "https://thumbs.dreamstime.com/b/chicken-manchurian-fried-rice-indian-chinese-cuisine-indo-chinese-street-food-chicken-spicy-chicken-manchurian-served-219474817.jpg" },
+                { name: "Chicken Schezwan Fried Rice", price: 190, image: "https://thumbs.dreamstime.com/b/chicken-manchurian-fried-rice-indian-chinese-cuisine-indo-chinese-street-food-chicken-spicy-chicken-manchurian-served-219474817.jpg" },
+                { name: "Chicken Mushroom Fried Rice", price: 200, image: "https://thumbs.dreamstime.com/b/chicken-manchurian-fried-rice-indian-chinese-cuisine-indo-chinese-street-food-chicken-spicy-chicken-manchurian-served-219474817.jpg" },
+                { name: "Paneer Fried Rice", price: 220 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSx2rgv5Bjn3go40BiRqtuO9XPjpRKdek4VQw&s"},
+                { name: "Jeera Rice", price: 100, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZ9IFqa4H502NvoLtJeqcQq0SXpMkmS69f7A&s" },
+                { name: "Lemon Rice", price: 100 , image: "https://t3.ftcdn.net/jpg/04/29/25/72/360_F_429257288_Vjw9XLVCg7AacMNgfvmM2uCBb5xZxZ0J.jpg"},
+                { name: "Tomato Rice", price: 100, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQabh3n81uwjjJGFda9SBqsCASN6oktXkCAkQ&s" },
+                { name: "Curd Rice", price: 90 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRo94Gqj_qd9SeRt6mENaJ3pFNgMP3_oS8Niw&s"}
+                ],
+            },
+
+            {
+                category: "Noodles",
+                image: "https://t3.ftcdn.net/jpg/06/10/03/82/360_F_610038219_jVhQanmTK0WUw2NO0lPhQBUqdQiLzTOs.jpg",
+                items: [
+                { name: "Veg Noodles", price: 100 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcDFe6srAAgfr7nDqwCw5tLcmeyNVSYO5DZw&s"},
+                { name: "Veg Manchurian Noodles", price: 120 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdKk1NXwYFJk6vVifiKZOmTAIPbKGJG3t7Kw&s"},
+                { name: "Veg Schezwan Noodles", price: 120, image: "https://t4.ftcdn.net/jpg/05/62/35/69/360_F_562356997_xiBUbvdWrebPBzdhfKinYvQAaPAJnp6z.jpg" },
+                { name: "Mushroom Noodles", price: 130 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUeYwKJ-y7ly366zEBx06vM7SUEn-a6pLpng&s"},
+                { name: "Paneer Noodles", price: 180 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-vVkOxUjDhM0aewZ_ox2iSMkPO_3XMZqC-w&s"},
+                { name: "Egg Noodles", price: 110 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ3gVe2EePEvPOchP9pcvqSJIkreRT7hjiSQ&s"},
+                { name: "Egg Manchurian Noodles", price: 120 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrNjPgRIABC0jF6XoS0O0WSvjw-odcgxuKlA&s"},
+                { name: "Egg Schezwan Noodles", price: 120, image: "https://img.freepik.com/premium-photo/egg-schezwan-hakka-noodles_974629-173396.jpg" },
+                { name: "Egg Mushroom Noodles", price: 170, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6uHhmo-y9wZtiQF4QDXoHaujtOBIP3ErBhA&s" },
+                { name: "Chicken Noodles", price: 150, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTj14IrKHRm3-4--sY8NCaB3TTqybtHVISMw&s" },
+                { name: "Chicken Manchurian Noodles", price: 180, image: "https://t4.ftcdn.net/jpg/11/71/00/45/360_F_1171004518_4NkJbBGkHBf6pEhEF4cGEVOA8ZSoFMKg.jpg" },
+                { name: "Chicken Schezwan Noodles", price: 190, image: "https://t4.ftcdn.net/jpg/11/71/00/45/360_F_1171004518_4NkJbBGkHBf6pEhEF4cGEVOA8ZSoFMKg.jpg" },
+                { name: "Chicken Mushroom Noodles", price: 200, image: "https://t4.ftcdn.net/jpg/11/71/00/45/360_F_1171004518_4NkJbBGkHBf6pEhEF4cGEVOA8ZSoFMKg.jpg" }
+                ],
+            },
+
+            {
+                category: "Fruit Shake",
+                image: "https://static.toiimg.com/thumb/msid-113025116,width-1280,height-720,imgsize-78566,resizemode-6,overlay-toi_sw,pt-32,y_pad-40/photo.jpg",
+                items: [
+                { name: "Papaya", price: 120, image: "https://t3.ftcdn.net/jpg/11/13/53/18/360_F_1113531835_2ibkuK1drHAFDct6CGCsn7ugSH7yR2yN.jpg" },
+                { name: "Pineapple", price: 120 , image: "https://img.freepik.com/premium-photo/fresh-smoothie-pineapple-lassi-with-pineapple-fruit-studio-background-restaurant-with-garden_741910-8341.jpg"},
+                { name: "Butter Fruit", price: 120, image: "https://i.pinimg.com/736x/f9/74/3a/f9743a8b84d99cf550f7dea1af81a7da.jpg" },
+                { name: "Apple", price: 120 , image: "https://img.freepik.com/premium-photo/fresh-smoothie-apple-lassi-with-apple-fruit-studio-background-restaurant-with-garden_741910-6215.jpg"},
+                { name: "Pomegranate", price: 120, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFfPvI6Ok00U6bglN05ZObbSLJ_Y5yBCXnMQ&s" },
+                { name: "Dragon Fruit", price: 120 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwWRaMlzXFThd_uIkgt3hImeA1o7HIm7J9xg&s"}
+                ],
+            },
+
+            {
+                category: "Fruit Salad",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRo1bEkPE7L-IiLAJN9tCD1ZUBPsEkqSwgwvg&s",
+                items: [
+                { name: "Akka Fruit Salad", price: 150, image: "https://img.freepik.com/premium-photo/delicious-fruit-salad-glass-with-ice-cream_841543-18529.jpg" },
+                { name: "Special Fruit Salad", price: 140 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHZkk_kwDAxE3rwW4lxyGXJhR0Uz6-RPt7LA&s"},
+                { name: "Fruit Salad", price: 120, image: "https://thumbs.dreamstime.com/b/fresh-fruit-salad-ice-cream-background-nature-fresh-fruit-salad-ice-cream-background-nature-343200282.jpg" },
+                { name: "Dry Fruit Salad", price: 150, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSN2Oh3hLqj6rsHVTs-D8grucmoWPXpi-r1g&s" },
+                { name: "Dry Fresh Fruit Salad", price: 140, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT45hVL-Qh3LqsthlmB_Igxgu2YeBXj3cKnrw&s" },
+                { name: "Malabar Fruit Salad", price: 140, image: "https://img.freepik.com/free-photo/top-view-delicious-fruit-salad-inside-plate-with-fresh-fruits-gray-fruit-tree-exotic-tropical-photo-ripe-diet_140725-109945.jpg" }
+                ],
+            },
+
+            {
+                category: "Ice Cream Shake",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0vZsB7k9mSOpMwh4wV2vNHe-2-vjFh_n2EQ&s",
+                items: [
+                { name: "Vanilla", price: 120, image: "https://img.freepik.com/free-photo/sweet-drink-dessert-wooden-table-generative-ai_188544-12280.jpg" },
+                { name: "Strawberry", price: 120, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSR_-tHKY3E8Kk8dP6gNImL2Ic1m0-VHR8H2A&s" },
+                { name: "Spanish Delight", price: 130, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuG02Szo89XznzMxX68xRaiNF7H-c9Shk5Rw&s" },
+                { name: "Butterscotch", price: 130, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUhHLtfkqli8jSSI8TJWrZufWxwzL0Xps-SQ&s" },
+                { name: "Pista", price: 120, image: "https://img.freepik.com/premium-photo/creamy-pistachio-milkshake-with-crushed-pistachios_1169880-147792.jpg?semt=ais_hybrid" },
+                { name: "Tender Coconut", price: 140, image: "https://shottbeverages.com/wp-content/uploads/2020/06/Coconut-Milkshake-697x641.jpg" },
+                { name: "Afghani", price: 140, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbxEfXz1u9w6uOlfRvX-qhZJ5MhoMGr47pGQ&s" },
+                { name: "Red Velvet", price: 140 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdLOnIIDfbrpd4NfOy5NpYcshqVoYnvJ2tew&s"},
+                { name: "Black Currant", price: 140 , image: "https://cdn.grofers.com/assets/search/usecase/banner/blackcurrant_shake_01.png"},
+                { name: "Blueberry", price: 140 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1f1iD2p6tlS27r346aOUBnURzU417r7GLcg&s"},
+                { name: "Custard Apple", price: 130, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-DasvKZmwpS3R_ZyfYoJEzQNx7r7_q8QklA&s" },
+                { name: "Honey Nut Crunch", price: 150 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAcKDhASw-DHJT2EeXd_HnaZ7FcNlyKCnieA&s"},
+                { name: "Cocktail", price: 130, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxr2_aKKqnsP0eeBT3wzH1ecusI9cfO7OTJQ&s" }
+                ],
+            },
+
+            {
+                category: "Health Tropical Juice",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTK9YF_ZL5lpuEYufkm_JXtjlZ8d3oNO528lQ&s",
+                items: [
+                { name: "Amla Kukumar", price: 80 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmmztVw-1oZVgsiGwOUJeDo4kA455XO68VGg&s"},
+                { name: "Miracle", price: 140 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_dG5TUjc8lXcnMWiok-dK3VNITvzMvwcyTw&s"},
+                { name: "ABC (Apple Beetroot Carrot)", price: 140 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0ujh8PAVOAicVFXF4C6xciskf4yBe9Qx8BQ&s"},
+                { name: "Carrot+Palak+Yogurt", price: 140, image: "https://cdn.healthyrecipes101.com/recipes/images/juices/storage-freezing-spinach-carrot-juice-clanp1vay00t1pw1bfagt8nja.webp?w=1280&h=1920&q=80" },
+                { name: "Carrot+Palak+Yogurt+Honey", price: 180, image: "https://cdn.healthyrecipes101.com/recipes/images/juices/storage-freezing-spinach-carrot-juice-clanp1vay00t1pw1bfagt8nja.webp?w=1280&h=1920&q=80" },
+                { name: "Carrot Pineapple", price: 120, image: "https://static.toiimg.com/photo/82292563.cms" },
+                { name: "Carrot Beetroot", price: 80 , image: "https://static.toiimg.com/photo/82292563.cms"},
+                { name: "Amla", price: 80 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmmztVw-1oZVgsiGwOUJeDo4kA455XO68VGg&s"},
+                { name: "Cucumber", price: 80, image: "https://www.allrecipes.com/thmb/vUpsMhQ_EA5qXy6AmXAgDyI4PMU=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/197751_RefreshingCucumberLemonade_ddmfs_3x4_3673-cf60e5dcd1db4d149ec5e0c34569f690.jpg" },
+                { name: "Carrot", price: 80 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhbrSocQlDr5EutfuEFG9nTxvc1t1XdPzREw&s"}
+                ],
+            },
+
+            {
+                category: "Juices",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtaK-nast8Vi4FqrkBKu5NkxZQ9aVWGn0u_A&s",
+                items: [
+                { name: "Pineapple", price: 80 , image: "https://dwellbymichelle.com/wp-content/uploads/2022/06/DWELL-Refreshing-PIneapple-Juice-Recipe-scaled.jpg"},
+                { name: "Apple", price: 10, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrUyUcxGa2eQYZGHuOw3L4Vg2uEnI84No5-w&s" },
+                { name: "Papaya", price: 80, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_d9QAQNtxL6_jRgrtvGcsJy8QZCy7n65mdQ&s" },
+                { name: "Orange", price: 70, image: "https://img.freepik.com/free-photo/front-view-fresh-orange-juice-dark-background-drink-citrus-fruit-photo-color_140725-141823.jpg" },
+                { name: "Watermelon", price: 80, image: "https://img.freepik.com/premium-photo/watermelon-juice-blended-with-ice-create-refreshing-summer-slushie_1234738-220331.jpg" },
+                { name: "Muskmelon", price: 80 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw9MklBAjTDXBvozq9BzjWnpO1pg5o0Avqpw&s"},
+                { name: "Pomegranate", price: 100, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7hxZ56Cbdz0_DqHkHzcOz2u8PHnI8QNy1zw&s" },
+                { name: "DragonFruit", price: 120 , image: "https://img.freepik.com/premium-photo/dragon-fruits-with-tropical-cocktail-mocktail_1170794-338480.jpg"},
+               
+                ],
+            },
+
+        {
+            category: "Falooda",
+            image: "https://static.toiimg.com/thumb/63533203.cms?imgsize=528108&width=800&height=800",
+            items: [
+            { name: "Akka Special Falooda", price: 170, image: "https://t3.ftcdn.net/jpg/09/61/53/34/360_F_961533417_5c9BTxGre1aW08VoY1KjeWCMozjuZX4V.jpg" },
+            { name: "Malabar Falooda", price: 150, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS62qxc0vx5yBJVhvpB7S-9gzLauMfR8NetCw&s" },
+            { name: "Dry Fruit Falooda", price: 190, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0Snknf2f9fpdU42D62wvNF6urEyP8GzAaRw&s" },
+            { name: "Dry and Fresh Falooda", price: 160, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0Snknf2f9fpdU42D62wvNF6urEyP8GzAaRw&s" },
+            { name: "Choco Falooda", price: 150 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLMxbLdURxZGQ57YrYlNZQabKGructo5q_1w&s"},
+            ]
+        },
+
+        {
+        category: "Lemonade",
+        image: "https://media.istockphoto.com/id/1401150816/photo/two-glasses-of-lemonade-with-mint-and-lemons.jpg?b=1&s=612x612&w=0&k=20&c=h9g_LNwAmpLWQz1xH55FoL8AHgedjCHufWkCOBgoN0o=",
+        items: [
+            { name: "Fresh Lemonade", price: 60, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzSP0ddqOddWwDeygOO9yZqBwWu7U1wyDBMg&s" },
+            { name: "Pineapple Lemonade", price: 60, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkQvFRvpiOiW2m4_tsKmHBHGn3ZmgE_KdF_w&s" },
+            { name: "Grape Lemonade", price: 60 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq_FHwjlECGUd0incNGzUjuJ1m1ZCEsCLM7Q&s"},
+            { name: "Orange Lemonade", price: 60 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5T_MhtcFiHLVLjfPE4n1qjpUJ2FOELBcgEA&s"},
+            { name: "Ginger Lemonade", price: 60 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUaUY1mphyR0_Rtr21RG-6UD5PvSnwim65vQ&s"},
+            { name: "Chilli Lemonade", price: 60 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiuIZAChc4f7V2-Q1OWCS8onWhj217ckN5Yg&s"}
+            ]
+        },
+
+        {
+            category: "Dry Fruit Shake",
+            image: "https://www.shutterstock.com/image-photo/anjeer-milk-shake-dried-fig-600nw-1370793977.jpg",
+            items: [
+                { name: "Mix Dry Fruit Shake", price: 150, image: "https://cdn.grofers.com/assets/search/usecase/banner/dry_fruit_shake_01.png" },
+                { name: "Dates Shake", price: 140, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLmNEBeqZ1yf8rjYf05oY1HvHSYwHdXpCDUQ&s" },
+                { name: "Cashew Nut Shake", price: 140, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3RNHvArHSPYCb5dencatDh_-34QhYzGE9Tg&s" },
+                { name: "Dates and Cashew Shake", price: 150 , image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3RNHvArHSPYCb5dencatDh_-34QhYzGE9Tg&s"},
+                { name: "Fig and Honey Shake", price: 150, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMaMQFFs5EHukMh7yrZj03DFlQnv5yZyLfEA&s" },
+                { name: "Fig Shake", price: 140, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMaMQFFs5EHukMh7yrZj03DFlQnv5yZyLfEA&s" }
+            ]
+        }
+
+    ];
+
+
+        const cart = [];
+
+
+        document.addEventListener('click', function(event) {
+
+            if (event.target.classList.contains('quantity-decrease')) {
+                const quantityInput = event.target.nextElementSibling;
+                let currentValue = parseInt(quantityInput.value);
+                if (currentValue > 0) {
+                    quantityInput.value = currentValue - 1;
+                }
+            }
+
+
+            if (event.target.classList.contains('quantity-increase')) {
+                const quantityInput = event.target.previousElementSibling;
+                let currentValue = parseInt(quantityInput.value);
+                quantityInput.value = currentValue + 1;
+            }
+
+
+            if (event.target.classList.contains('add-to-cart')) {
+                const itemCard = event.target.closest('.bg-white');
+                const itemName = itemCard.querySelector('h3').textContent;
+                const itemPrice = parseFloat(itemCard.querySelector('.text-green-600').textContent.replace('₹', ''));
+                const quantityInput = itemCard.querySelector('.quantity-input');
+                const quantity = parseInt(quantityInput.value);
+
+                if (quantity > 0) {
+                    addToCart({ name: itemName, price: itemPrice, quantity });
+                    quantityInput.value = 0;
+                }
+            }
+
+
+            if (event.target.id === 'mobileCartToggle' || event.target.closest('#mobileCartToggle')) {
+                const cartContainer = document.getElementById('cartContainer');
+                cartContainer.classList.remove('hidden');
+                history.pushState({ page: 'cart' }, '', '#cart'); // Add this line
+            }
+
+
+            if (event.target.id === 'mobileCartClose' || event.target.closest('#mobileCartClose')) {
+                const cartContainer = document.getElementById('cartContainer');
+                cartContainer.classList.add('hidden');
+                history.back(); // Add this line
+            }
+
+
+            if (event.target.id === 'backButton' || event.target.closest('#backButton')) {
+                document.getElementById('menuItems').classList.add('hidden');
+                document.getElementById('menuCategories').classList.remove('hidden');
+            }
+
+
+            if (event.target.id === 'clearCartButton') {
+                cart.length = 0;
+                updateCart();
+            }
+
+
+
+        });
+
+        function renderCategories(data) {
+    const container = document.getElementById('menuCategories');
+    container.innerHTML = `
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 p-2">
+        </div>
+    `;
+
+    const gridContainer = container.querySelector('.grid');
+    let touchStartY = 0; // Track vertical touch position
+    let touchEndY = 0;
+
+    data.forEach(category => {
+        const categoryCard = document.createElement('div');
+        categoryCard.className = `
+            bg-white rounded-lg overflow-hidden
+            transform transition-all duration-300
+            hover:scale-102 active:scale-98
+            cursor-pointer
+            flex flex-col
+            border border-gray-100
+        `;
+
+        categoryCard.innerHTML = `
+            <div class="aspect-square w-full overflow-hidden">
+                <img
+                    src="${category.image}"
+                    alt="${category.category}"
+                    class="w-full h-full object-cover"
+                    onerror="this.src='placeholder-image.jpg'"
+                >
+            </div>
+            <div class="p-1.5 flex-1 flex flex-col justify-center min-h-[2.5rem]">
+                <h2 class="text-xs font-bold text-gray-800 text-center leading-tight">
+                    ${category.category}
+                </h2>
+                <p class="text-[10px] font-bold text-gray-600 mt-0.5 text-center">
+                    ${category.items?.length || 0} items
+                </p>
+            </div>
+        `;
+
+        // Detect touch movement to prevent accidental opening
+        categoryCard.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY; // Store start Y position
+        });
+
+        categoryCard.addEventListener('touchmove', (e) => {
+            touchEndY = e.touches[0].clientY; // Update end Y position
+        });
+
+        categoryCard.addEventListener('touchend', () => {
+            // If vertical movement is minimal (less than 10px), it's a valid tap
+            if (Math.abs(touchStartY - touchEndY) < 10) {
+                renderItems(category);
+            }
+        });
+
+        categoryCard.addEventListener('click', () => renderItems(category));
+        gridContainer.appendChild(categoryCard);
+    });
+
+    // Add scroll restoration
+    if (!document.getElementById('scrollStyle')) {
+        const style = document.createElement('style');
+        style.id = 'scrollStyle';
+        style.textContent = `
+            #menuCategories {
+                scroll-behavior: smooth;
+                -webkit-overflow-scrolling: touch;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
+
+        function getCokeSize(totalAmount) {
+            if (totalAmount > 799) {
+                return '750ml Soft Drink';
+            } else if (totalAmount > 499) {
+                return '250ml Soft Drink';
+            } else if (totalAmount > 299) {
+                return '200ml Soft Drink';
+            } else {
+                return null;
+            }
+        }
+
+        
+        function renderItems(category) {
+            history.pushState({ page: 'items' }, '', '#items');
+            document.getElementById('menuCategories').classList.add('hidden');
+            document.getElementById('menuItems').classList.remove('hidden');
+        
+            // Create popup container if it doesn't exist
+            if (!document.getElementById('imagePopup')) {
+                const popup = document.createElement('div');
+                popup.id = 'imagePopup';
+                popup.className = 'fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center z-50';
+                popup.addEventListener('click', () => popup.classList.add('hidden'));
+                document.body.appendChild(popup);
+            }
+        
+            const itemsContainer = document.getElementById('itemsList');
+            itemsContainer.innerHTML = '';
+        
+            category.items.forEach(item => {
+                const itemCard = document.createElement('div');
+                itemCard.className = `
+                    bg-white shadow-lg rounded-lg p-4
+                    transform transition duration-300 hover:scale-105
+                    flex flex-row items-start
+                    border-l-4 border-purple-600
+                    hover:border-purple-700
+                `;
+        
+                itemCard.innerHTML = `
+                    <div class="flex-1 text-left">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-1">${item.name}</h3>
+                        <p class="text-green-600 font-bold text-base mb-2">₹${item.price}</p>
+                        
+                        <div class="flex items-center mt-2 space-x-2">
+                            <button class="quantity-decrease px-2.5 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-700 font-medium transition-colors">
+                                －
+                            </button>
+                            <input
+                                type="number"
+                                min="0"
+                                value="0"
+                                class="quantity-input w-12 text-center border-2 border-gray-200 py-0.5 text-base font-medium"
+                                readonly
+                            >
+                            <button class="quantity-increase px-2.5 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-700 font-medium transition-colors">
+                                ＋
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="ml-4 flex flex-col items-end flex-shrink-0">
+                        <div class="relative w-24 h-24 mb-2">
+                            <img
+                                src="${item.image}"
+                                alt="${item.name}"
+                                class="w-full h-full object-cover rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                                onerror="this.src='placeholder-image.jpg'"
+                            >
+                            <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 rounded-b-lg">
+                                <p class="text-[8px] text-white italic text-center py-0.5 px-1">
+                                    Image for illustration
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <button class="add-to-cart px-4 py-1.5 bg-purple-600 text-white rounded-full
+                            hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600
+                            focus:ring-opacity-50 transform hover:scale-105 transition-all
+                            font-medium shadow-md hover:shadow-lg text-sm">
+                            Add to Cart
+                        </button>
+                    </div>
+                `;
+        
+                // Add image popup functionality
+                const img = itemCard.querySelector('img');
+                let longPressTimer;
+                let isLongPress = false;
+        
+                img.addEventListener('touchstart', (e) => {
+                    longPressTimer = setTimeout(() => {
+                        isLongPress = true;
+                        showImagePopup(item.image, item.name);
+                    }, 500); // 500ms for long press
+                });
+        
+                img.addEventListener('touchend', (e) => {
+                    clearTimeout(longPressTimer);
+                    setTimeout(() => {
+                        isLongPress = false;
+                    }, 100);
+                });
+        
+                img.addEventListener('touchmove', (e) => {
+                    clearTimeout(longPressTimer);
+                });
+        
+                // For desktop: show on right-click
+                img.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    showImagePopup(item.image, item.name);
+                });
+        
+                itemsContainer.appendChild(itemCard);
+            });
+        }
+        
+        function showImagePopup(imageSrc, altText) {
+            const popup = document.getElementById('imagePopup');
+            popup.innerHTML = `
+                <img 
+                    src="${imageSrc}" 
+                    alt="${altText}"
+                    class="max-w-[90vw] max-h-[90vh] object-contain rounded-lg"
+                    onerror="this.src='placeholder-image.jpg'"
+                >
+            `;
+            popup.classList.remove('hidden');
+        }  ///poput
+
+
+        document.getElementById('backButton').addEventListener('click', () => {
+            history.pushState({ page: 'categories' }, '', '#categories'); // Add this line
+            document.getElementById('menuItems').classList.add('hidden');
+            document.getElementById('menuCategories').classList.remove('hidden');
+        });
+
+        window.addEventListener('popstate', function(event) {
+            if (event.state && event.state.page === 'items') {
+                // Show the items page
+                document.getElementById('menuItems').classList.remove('hidden');
+                document.getElementById('menuCategories').classList.add('hidden');
+            } else {
+                // Show the categories page
+                document.getElementById('menuItems').classList.add('hidden');
+                document.getElementById('menuCategories').classList.remove('hidden');
+            }
+        });
+
+        // Listen for the popstate event
+window.addEventListener('popstate', function(event) {
+    const cartContainer = document.getElementById('cartContainer');
+    if (event.state && event.state.page === 'cart') {
+        // Show the cart page
+        cartContainer.classList.remove('hidden');
+    } else {
+        // Hide the cart page
+        cartContainer.classList.add('hidden');
+    }
+});
+
+// Call this function on page load to set the initial state if not already set
+if (window.location.hash !== '#cart') {
+    history.replaceState({ page: 'main' }, '', window.location.pathname);
+}
+
+        // Call this function on page load to set the initial state
+        history.replaceState({ page: 'categories' }, '', '#categories');
+
+        function addToCart(item) {
+            const existingItemIndex = cart.findIndex(cartItem => cartItem.name === item.name);
+
+            if (existingItemIndex > -1) {
+                cart[existingItemIndex].quantity += item.quantity;
+            } else {
+                cart.push(item);
+            }
+
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            const cartItemCount = document.getElementById('cartItemCount');
+            const mobileBadge = document.getElementById('mobileBadge');
+            const totalItemCount = document.getElementById('totalItemCount');
+            const totalAmount = document.getElementById('totalAmount');
+
+            cartItemsContainer.innerHTML = '';
+
+            let totalItems = 0;
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const cartItem = document.createElement('li');
+                cartItem.className = 'flex justify-between items-center';
+                cartItem.innerHTML = `
+                    <div class="flex items-center justify-between w-full mb-4">
+                    <div class="flex-1">
+                        <span class="font-medium text-gray-800">${item.name} x </span>
+                        <span class="font-bold text-gray-800">${item.quantity}</span>
+                        <span class="text-gray-500 ml-2">₹${item.price * item.quantity}</span>
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <button class="quantity-btn minus text-gray-500 w-8 h-8 flex items-center justify-center border rounded-full" data-index="${index}">-</button>
+                        <span class="mx-2 text-gray-800 font-bold">${item.quantity}</span>
+                        <button class="quantity-btn plus text-gray-500 w-8 h-8 flex items-center justify-center border rounded-full" data-index="${index}">+</button>
+                    </div>
+                    <button class="remove-item text-red-500 hover:text-red-700 ml-4 focus:outline-none" data-index="${index}">Remove</button>
+                `;
+
+                cartItemsContainer.appendChild(cartItem);
+
+                totalItems += item.quantity;
+                total += item.price * item.quantity;
+
+
+                const removeButton = cartItem.querySelector('.remove-item');
+                removeButton.addEventListener('click', function() {
+                    cart.splice(index, 1);
+                    updateCart();
+                });
+
+
+                const minusButton = cartItem.querySelector('.quantity-btn.minus');
+                minusButton.addEventListener('click', function() {
+                    if (item.quantity > 1) {
+                        item.quantity--;
+                        updateCart();
+                    }
+                });
+
+
+                const plusButton = cartItem.querySelector('.quantity-btn.plus');
+                plusButton.addEventListener('click', function() {
+                    item.quantity++;
+                    updateCart();
+                });
+            });
+
+            cartItemCount.textContent = cart.length;
+            mobileBadge.textContent = cart.length;
+            totalItemCount.textContent = totalItems;
+            totalAmount.textContent = `₹${total}`;
+
+            // Highlight the current eligible offer based on the cart total
+    const cokeOfferNotification = document.getElementById('cokeOfferNotification');
+    const offerMessages = cokeOfferNotification.querySelectorAll('p');
+    let earnedCokeMessage = '';
+
+    offerMessages.forEach((message, index) => {
+        // Remove any previous highlights or messages
+        message.classList.remove('font-bold', 'text-green-600');
+
+        // Determine which offer is currently applicable
+        if (total > 799 && index === 2) {
+            message.classList.add('font-bold', 'text-green-600');
+            earnedCokeMessage = 'Congratulations! You get a free 750ml Soft Drink with your order!';
+        } else if (total > 499 && total <= 899 && index === 1) {
+            message.classList.add('font-bold', 'text-green-600');
+            earnedCokeMessage = 'Congratulations! You get a free 250ml Soft Drink with your order!';
+        } else if (total > 299 && total <= 499 && index === 0) {
+            message.classList.add('font-bold', 'text-green-600');
+            earnedCokeMessage = 'Congratulations! You get a free 200ml Soft Drink with your order!';
+        }
+    });
+
+    // Display the earned Coke message if applicable
+    const cartSummary = document.getElementById('cartSummary'); // Assuming this is the ID of the cart summary section
+    const earnedCokeNotification = document.getElementById('earnedCokeNotification');
+    if (earnedCokeMessage) {
+        if (!earnedCokeNotification) {
+            const earnedCokeInfo = document.createElement('p');
+            earnedCokeInfo.id = 'earnedCokeNotification';
+            earnedCokeInfo.textContent = earnedCokeMessage;
+            earnedCokeInfo.className = 'text-green-600 font-bold mt-2';
+            cartSummary.before(earnedCokeInfo); // Place it before the cart summary section
+        } else {
+            earnedCokeNotification.textContent = earnedCokeMessage;
+        }
+    } else if (earnedCokeNotification) {
+        // If the message is empty and the element exists, remove it
+        earnedCokeNotification.remove();
+    }
+
+        }
+
+
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+
+            const filteredData = menuData.filter(category => {
+
+                const categoryMatches = category.category.toLowerCase().includes(searchTerm);
+                const itemsMatch = category.items.some(item =>
+                    item.name.toLowerCase().includes(searchTerm)
+                );
+
+                return categoryMatches || itemsMatch;
+            });
+
+            renderCategories(filteredData);
+        });
+             renderCategories(menuData);
+
+
+             document.getElementById('whatsappButton').addEventListener('click', () => {
+                const roomNumberInput = document.getElementById('roomNumber');
+                const roomNumber = roomNumberInput.value.trim();
+            
+                if (!roomNumber) {
+                    alert('Please enter your room number before sending the order.');
+                    return;
+                }
+            
+                // Assuming 'cart' is a global variable storing order items
+                let whatsappMessage = `*🍽️ Room No: ${roomNumber}*\n\n`;
+                let orderSummary = '📝 *Order Summary*\n\n';
+                let totalAmount = 0;
+            
+                if (cart.length === 0) {
+                    alert("Your cart is empty! Please add items before placing an order.");
+                    return;
+                }
+            
+                cart.forEach((item, index) => {
+                    const itemTotal = item.price * item.quantity;
+                    totalAmount += itemTotal;
+                    orderSummary += `*${index + 1}. 🍽️ ${item.name} x ${item.quantity} - ₹${itemTotal.toFixed(2)}*\n`;
+                });
+            
+                whatsappMessage += orderSummary;
+                whatsappMessage += `\n*───────────────────────*\n`;
+                whatsappMessage += `*💰 Total Amount: ₹${totalAmount.toFixed(2)}*\n\n`;
+                whatsappMessage += `❤️ *Thank you for your order!*\n\n`;
+                whatsappMessage += `*💬 Got suggestions or feedback?*\n`;
+                whatsappMessage += `👉 *Drop me a message on LinkedIn:* https://www.linkedin.com/in/harsh-pandita-dev/\n\n`;
+            
+                const encodedMessage = encodeURIComponent(whatsappMessage);
+                const whatsappUrl = `https://wa.me/919515543873?text=${encodedMessage}`;
+                window.open(whatsappUrl, '_blank');
+            });
+            
+
+
+document.getElementById('checkoutButton').addEventListener('click', () => {
+
+    if (!cart || cart.length === 0 || getTotalAmount() === 0) {
+        alert('Please add items to your cart before checking out.');
+        return; 
+    }
+
+    const orderDetailsContainer = document.getElementById('orderDetails');
+    const modalTotalAmount = document.getElementById('modalTotalAmount');
+    const modal = document.getElementById('orderModal');
+    const roomNumberInput = document.getElementById('roomNumber');
+
+orderDetailsContainer.innerHTML = '';
+const roomHelperText = document.createElement('p');
+roomHelperText.className = 'text-sm text-gray-600 mt-1';
+roomNumberInput.parentNode.appendChild(roomHelperText);
+
+// Remove number validation
+roomNumberInput.addEventListener('input', function() {
+    this.setCustomValidity('');
+});
+    let totalAmount = 0;
+
+    cart.forEach((item, index) => {
+        const orderItem = document.createElement('li');
+        orderItem.className = 'flex justify-between mb-2 font-bold text-lg';
+        const itemTotal = item.price * item.quantity;
+        totalAmount += itemTotal;
+
+        orderItem.innerHTML = `
+            <span>${index + 1}. 🍽️ ${item.name} x ${item.quantity}</span>
+            <span>₹${itemTotal.toFixed(2)}</span>
+        `;
+        orderDetailsContainer.appendChild(orderItem);
+    });
+    
+
+    modalTotalAmount.textContent = `₹${totalAmount.toFixed(2)}`;
+    modal.classList.add('active');
+});
+function getTotalAmount() {
+    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+}
+
+
+            // Close modal functionality
+            document.getElementById('closeModalButton').addEventListener('click', () => {
+                const modal = document.getElementById('orderModal');
+                modal.classList.remove('active');
+            });
+    </script>
+    </body>
+</html>
