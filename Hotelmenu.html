@@ -1214,6 +1214,173 @@ if (window.location.hash !== '#cart') {
 
             updateCart();
         }
+//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+function getAllMenuItems() {
+    const allItems = [];
+    menuData.forEach(category => {
+        category.items.forEach(item => {
+            allItems.push({
+                ...item,
+                categoryName: category.category // Add the category name to each item
+            });
+        });
+    });
+    return allItems;
+}
+
+// Setup search functionality for items
+function setupItemSearch() {
+    const searchInput = document.getElementById('searchInput');
+    const allItems = getAllMenuItems();
+    
+    // Create a suggestions container
+    const suggestionsContainer = document.createElement('div');
+    suggestionsContainer.id = 'searchSuggestions';
+    suggestionsContainer.className = 'absolute z-10 bg-white w-full mt-1 rounded-lg shadow-lg max-h-60 overflow-y-auto hidden';
+    searchInput.parentNode.appendChild(suggestionsContainer);
+    
+    // Update placeholder text for item search
+    searchInput.placeholder = "Search menu items...";
+    
+    // Handle input in the search field
+    searchInput.addEventListener('input', function() {
+        const query = this.value.toLowerCase().trim();
+        
+        // Clear suggestions if query is less than 3 characters
+        if (query.length < 3) {
+            suggestionsContainer.innerHTML = '';
+            suggestionsContainer.classList.add('hidden');
+            return;
+        }
+        
+        // Filter items that match the query
+        const matchingItems = allItems.filter(item => 
+            item.name.toLowerCase().includes(query)
+        );
+        
+        // Display suggestions
+        displaySuggestions(matchingItems, query);
+    });
+    
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+        if (e.target !== searchInput && e.target !== suggestionsContainer) {
+            suggestionsContainer.classList.add('hidden');
+        }
+    });
+    
+    // Show suggestions when search input is focused if there's content
+    searchInput.addEventListener('focus', function() {
+        if (this.value.trim().length >= 3) {
+            suggestionsContainer.classList.remove('hidden');
+        }
+    });
+}
+
+// Display matching items as suggestions
+function displaySuggestions(items, query) {
+    const suggestionsContainer = document.getElementById('searchSuggestions');
+    suggestionsContainer.innerHTML = '';
+    
+    if (items.length === 0) {
+        const noResults = document.createElement('div');
+        noResults.className = 'px-4 py-2 text-gray-500 italic';
+        noResults.textContent = 'No matching items found';
+        suggestionsContainer.appendChild(noResults);
+    } else {
+        items.forEach(item => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.className = 'px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center';
+            
+            // Create thumbnail image
+            const thumbnail = document.createElement('img');
+            thumbnail.src = item.image;
+            thumbnail.alt = item.name;
+            thumbnail.className = 'w-10 h-10 object-cover rounded-md mr-3';
+            thumbnail.onerror = function() {
+                this.src = 'placeholder-image.jpg';
+            };
+            
+            // Create content div for text
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'flex-1';
+            
+            // Highlight the matching part of the name
+            const itemName = document.createElement('div');
+            itemName.className = 'font-medium text-gray-800';
+            
+            // Create the highlighted name
+            const nameLower = item.name.toLowerCase();
+            const queryStart = nameLower.indexOf(query.toLowerCase());
+            if (queryStart !== -1) {
+                const before = item.name.substring(0, queryStart);
+                const match = item.name.substring(queryStart, queryStart + query.length);
+                const after = item.name.substring(queryStart + query.length);
+                
+                itemName.innerHTML = `${before}<span class="bg-yellow-200">${match}</span>${after}`;
+            } else {
+                itemName.textContent = item.name;
+            }
+            
+            // Add category and price info
+            const itemDetails = document.createElement('div');
+            itemDetails.className = 'text-xs text-gray-500';
+            itemDetails.textContent = `${item.categoryName} • ₹${item.price}`;
+            
+            // Assemble the content
+            contentDiv.appendChild(itemName);
+            contentDiv.appendChild(itemDetails);
+            
+            suggestionItem.appendChild(thumbnail);
+            suggestionItem.appendChild(contentDiv);
+            
+            // Add click handler to select this item
+            suggestionItem.addEventListener('click', () => {
+                searchInput.value = item.name;
+                suggestionsContainer.classList.add('hidden');
+                
+                // Find the category for this item
+                const category = menuData.find(cat => cat.category === item.categoryName);
+                if (category) {
+                    // Navigate to the item's category
+                    renderItems(category);
+                    
+                    // Highlight the selected item with a slight delay to allow rendering
+                    setTimeout(() => {
+                        const itemElements = document.querySelectorAll('#itemsList > div');
+                        itemElements.forEach(el => {
+                            if (el.querySelector('h3').textContent === item.name) {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                el.classList.add('ring-2', 'ring-blue-500');
+                                
+                                // Remove highlight after a few seconds
+                                setTimeout(() => {
+                                    el.classList.remove('ring-2', 'ring-blue-500');
+                                }, 3000);
+                            }
+                        });
+                    }, 300);
+                }
+            });
+            
+            suggestionsContainer.appendChild(suggestionItem);
+        });
+    }
+    
+    suggestionsContainer.classList.remove('hidden');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    setupItemSearch();
+    
+   
+});
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////
 
         function updateCart() {
             const cartItemsContainer = document.getElementById('cartItems');
